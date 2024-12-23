@@ -1,28 +1,68 @@
 <!doctype html>
 <head>
-    <title>Hello Azure - Python Quickstart</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <title>Stock Query Form</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const today = new Date().toISOString().split("T")[0];
+
+            const startDate = document.getElementById("start_date");
+            const endDate = document.getElementById("end_date");
+
+            startDate.max = today;
+            endDate.max = today;
+
+            startDate.addEventListener("change", function () {
+                endDate.min = startDate.value;  
+                endDate.value = endDate.value < startDate.value ? startDate.value : endDate.value;
+            });
+            endDate.addEventListener("change", function () {
+                startDate.max = endDate.value || today;
+                startDate.value = endDate.value < startDate.value ? endDate.value : startDate.value;
+            });
+        });
+    </script>
 </head>
 <html>
    <body>
      <main>
-        <div class="px-4 py-3 my-2 text-center">
-            <img class="d-block mx-auto mb-4" src="{{ url_for('static', filename='images/azure-icon.svg') }}" alt="Azure Logo" width="192" height="192"/>
-            <!-- <img  src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
-            <h1 class="display-6 fw-bold text-primary">Welcome to Azure</h1>            
-          </div>
-        <form method="post" action="{{url_for('hello')}}">
+        <form method="get" action="http://127.0.0.1:5000/get-report">
             <div class="col-md-6 mx-auto text-center">
-                <label for="name" class="form-label fw-bold fs-5">Could you please tell me your name?</label>
 
-                <!-- <p class="lead mb-2">Could you please tell me your name?</p> -->
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
-                    <input type="text" class="form-control" id="name" name="name" style="max-width: 256px;">
-                  </div>            
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center my-2">
-                  <button type="submit" class="btn btn-primary btn-lg px-4 gap-3">Say Hello</button>
-                </div>            
+                <div class="my-2">
+                <label for="ticker" class="form-label fw-bold fs-5">Stock Ticker:</label>
+                <input type="text" class="form-control" id="ticker" name="ticker" required style="max-width: 256px;">
+                </div>
+
+                <div class="my-2">
+                <label for="start_date" class="form-label fw-bold fs-5 mt-3">Start Date (YYYY-MM-DD):</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" required style="max-width: 256px;">
+                </div>
+
+                <div class="my-2">
+                <label for="end_date" class="form-label fw-bold fs-5 mt-3">End Date (YYYY-MM-DD):</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" required style="max-width: 256px;">
+                </div>
+
+                <div class="my-2">
+                <label for="pvbt" class="form-label fw-bold fs-5 mt-3">Percent Volume Breakout Threshold:</label>
+                <input type="number" class="form-control" id="pvbt" name="pvbt" required style="max-width: 256px;">
+                </div>
+
+                <div class="my-2">
+                <label for="dct" class="form-label fw-bold fs-5 mt-3">Daily Change Threshold:</label>
+                <input type="number" class="form-control" id="dct" name="dct" required style="max-width: 256px;">
+                </div>
+
+                <div class="my-2">
+                <label for="holding" class="form-label fw-bold fs-5 mt-3">Holding Days:</label>
+                <input type="number" class="form-control" id="holding" name="holding" required style="max-width: 256px;">
+                </div>
+                <!-- Submit Button -->
+                <div class="my-3">
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center my-3">
+                    <button type="submit" class="btn btn-primary btn-lg px-4 gap-3">Submit</button>
+                </div>
+                </div>
             </div>
         </form>
      </main>      

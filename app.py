@@ -18,7 +18,7 @@ CORS(app)
 @app.route("/")
 def index():
     return render_template('index.html')
-    
+
 def findprevioustradingday(date_index: pd.DatetimeIndex, target_date: datetime):
     if target_date.tzinfo is None:
         target_date = pd.Timestamp(target_date).tz_localize('UTC')
@@ -34,8 +34,8 @@ def findprevioustradingday(date_index: pd.DatetimeIndex, target_date: datetime):
 def op():
     try:
         ticker = request.args.get('ticker',type=str)
-        start = request.args.get('start',type=str)
-        end = request.args.get('end',type=str)
+        start = request.args.get('start_date',type=str)
+        end = request.args.get('end_date',type=str)
         pvbt = request.args.get('pvbt',type=float) 
         dct = request.args.get('dct',type=float)
         holding = request.args.get('holding',type=int)
@@ -45,6 +45,7 @@ def op():
         url = "https://api.tiingo.com/tiingo/daily/{}/prices?startDate={}&endDate={}&token=4cb65d8af8f3aa3b4a073ea219027773a29fbbcd".format(ticker, querystart, end)
         x = requests.get(url).json()
     except:
+        traceback.print_exc()
         return "Bad Args", 400
     dates = []
     info = {}
@@ -56,8 +57,10 @@ def op():
             go = True
         if go == False:
             continue
-        dates.append(entry['date'])
         relevant_data = x[i-20:i]
+        if len(relevant_data) != 20:
+            continue
+        dates.append(entry['date'])
         volumes = [entry['volume'] for entry in relevant_data]
         avg_volume = sum(volumes) / len(volumes)
         percent_diff = (entry['close']/x[i-1]['close'] * 100) - 100
@@ -73,7 +76,7 @@ def op():
     writer.writerow(["date", "close_price", "price_diff_percent", "volume", "avg_volume", "buy_day", "profit", "diff_vs_nb_avg"])
     for date in dates:
         if info[date][4] == "YES":
-            writer.writerow([date[0:10]] + info[date] + [info[date][5]-(non_buy_day_total/non_buy_days) if info[date][5] != "N/A" else "N/A"])
+            writer.writerow([date[0:10].replace("-","/")] + info[date] + [info[date][5]-(non_buy_day_total/non_buy_days) if info[date][5] != "N/A" else "N/A"])
     output = make_response(si.getvalue())
     output.headers["Content-Disposition"] = "attachment; filename={}-{}-{}-{}-{}-{}.csv".format(ticker,start,end,pvbt,dct,holding)
     output.headers["Content-type"] = "text/csv"
