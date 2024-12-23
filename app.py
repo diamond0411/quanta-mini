@@ -49,20 +49,19 @@ def op():
         return "Bad Args", 400
     dates = []
     info = {}
-    go = False
     non_buy_day_total = 0
     non_buy_days = 0
+    volumes = []
+    avg_volume = float("inf")
     for i, entry in enumerate(x):
-        if datetime.strptime(entry['date'], '%Y-%m-%dT%H:%M:%S.%fZ') >= startdt:
-            go = True
-        if go == False:
+        if len(volumes) != 20:
+            volumes.append(entry['volume'])
             continue
-        relevant_data = x[i-20:i]
-        if len(relevant_data) != 20:
-            continue
+        else:
+            avg_volume = sum(volumes)/20
+            volumes.pop(0)
+            volumes.append(entry['volume'])
         dates.append(entry['date'])
-        volumes = [entry['volume'] for entry in relevant_data]
-        avg_volume = sum(volumes) / len(volumes)
         percent_diff = (entry['close']/x[i-1]['close'] * 100) - 100
         buy_day = "YES" if entry['volume'] > (pvbt/100 + 1) * avg_volume and percent_diff>dct else "NO"
         profit = x[i + holding]['close']-entry['close'] if buy_day == "YES" and i + holding < len(x) else "N/A"
