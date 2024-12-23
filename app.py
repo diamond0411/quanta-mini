@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 import pandas as pd
 import traceback
 import csv
-from flask import Flask, make_response, request
+from flask import Flask, make_response, request, render_template
 from flask_cors import CORS
 from io import StringIO
 tiingo = "4cb65d8af8f3aa3b4a073ea219027773a29fbbcd"
@@ -15,6 +15,10 @@ headers = {
 }
 app = Flask(__name__)
 CORS(app)
+@app.route("/")
+def index():
+    return render_template('index.html')
+    
 def findprevioustradingday(date_index: pd.DatetimeIndex, target_date: datetime):
     if target_date.tzinfo is None:
         target_date = pd.Timestamp(target_date).tz_localize('UTC')
