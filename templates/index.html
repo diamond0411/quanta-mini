@@ -1,5 +1,6 @@
 <!doctype html>
 <head>
+<html>
     <title>Stock Query Form</title>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -21,50 +22,75 @@
             });
         });
     </script>
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .form-container label {
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            width: 100%;
+        }
+    </style>
 </head>
-<html>
+
    <body>
-     <main>
+        <div class="form-container">
         <form method="get" action="http://127.0.0.1:5000/get-report">
             <div class="col-md-6 mx-auto text-center">
 
-                <div class="my-2">
+                <div class="mb-3">
                 <label for="ticker" class="form-label fw-bold fs-5">Stock Ticker:</label>
                 <input type="text" class="form-control" id="ticker" name="ticker" required style="max-width: 256px;">
                 </div>
 
-                <div class="my-2">
+                <div class="mb-3">
                 <label for="start_date" class="form-label fw-bold fs-5 mt-3">Start Date (YYYY-MM-DD):</label>
                 <input type="date" class="form-control" id="start_date" name="start_date" required style="max-width: 256px;">
                 </div>
 
-                <div class="my-2">
+                <div class="mb-3">
                 <label for="end_date" class="form-label fw-bold fs-5 mt-3">End Date (YYYY-MM-DD):</label>
                 <input type="date" class="form-control" id="end_date" name="end_date" required style="max-width: 256px;">
                 </div>
 
-                <div class="my-2">
+                <div class="mb-3">
                 <label for="pvbt" class="form-label fw-bold fs-5 mt-3">Percent Volume Breakout Threshold:</label>
                 <input type="number" class="form-control" id="pvbt" name="pvbt" required style="max-width: 256px;">
                 </div>
 
-                <div class="my-2">
+                <div class="mb-3">
                 <label for="dct" class="form-label fw-bold fs-5 mt-3">Daily Change Threshold:</label>
                 <input type="number" class="form-control" id="dct" name="dct" required style="max-width: 256px;">
                 </div>
 
-                <div class="my-2">
+                <div class="mb-3">
                 <label for="holding" class="form-label fw-bold fs-5 mt-3">Holding Days:</label>
                 <input type="number" class="form-control" id="holding" name="holding" required style="max-width: 256px;">
                 </div>
                 <!-- Submit Button -->
-                <div class="my-3">
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-center my-3">
                     <button type="submit" class="btn btn-primary btn-lg px-4 gap-3">Submit</button>
                 </div>
-                </div>
             </div>
-        </form>
-     </main>      
+            </form>    
+        </div>
    </body>
 </html>
